@@ -1,7 +1,10 @@
 import numpy as np
 import pylab as pb
 import scipy.stats as stats
-pb.ion()
+import time
+import matplotlib.pyplot as plt
+
+#pb.ion()
 
 #########################
 ## Question 1
@@ -20,11 +23,12 @@ def B(x):
     #input:	  x, np.array with d columns
     #output:  a matrix of geberal term B_{i,j} = b_j(x_i)
     b0 = np.ones((x.shape[0],1))
-    b1 = (x[:,0])[:,None]
-    B = np.hstack((b0,b1))
+    b1 = (x[:,3])[:,None]
+    b2 = b1*b1
+    B = np.hstack((b0,b1,b2))
     return(B)
 
-def LR(X,F,B,tau2):
+def LR(X,F,B):
     #input:	  X, np.array with d columns representing the DoE
     #		  F, np.array with 1 column representing the observations
     #		  B, a function returning the (p) basis functions evaluated at x
@@ -32,7 +36,13 @@ def LR(X,F,B,tau2):
     #output:  beta, estimate of coefficients np.array of shape (p,1)
     #		  covBeta, cov matrix of beta, np.array of shape (p,p)
 
-    # ... to be completed ...
+    phi = B(X)
+    tmp = np.linalg.inv(np.dot(phi.T,phi))
+    beta = np.dot(tmp,np.dot(phi.T,F))
+    N,D = X.shape
+    diff = F - np.dot(phi,beta)
+    sigma = (1 / (N - D)) * np.dot(diff,diff)
+    covBeta = sigma**2 * tmp
 
     return(beta,covBeta)
 
@@ -48,7 +58,9 @@ def predLR(x,B,beta,covBeta):
     #output:  m, predicted mean at x, np.array of shape (m,1)
     #		  v, predicted variance matrix, np.array of shape (m,m)
 
-    # ... to be completed ...
+    phi = B(x)
+    m = np.dot(phi,beta)
+    v = np.dot(phi,np.dot(covBeta,phi.T))
 
     return(m,v)
 
@@ -61,10 +73,10 @@ def plotModel(x,m,v):
     v = np.diag(v)
     upper=m+2*np.sqrt(v)
     lower=m-2*np.sqrt(v)
-    pb.plot(x,m,color="#204a87",linewidth=2)
-    pb.fill(np.hstack((x,x[::-1])),np.hstack((upper,lower[::-1])),color="#729fcf",alpha=0.3)
-    pb.plot(x,upper,color="#204a87",linewidth=0.2)
-    pb.plot(x,lower,color="#204a87",linewidth=0.2)
+    plt.plot(x,m,color="#204a87",linewidth=2)
+    plt.fill(np.hstack((x,x[::-1])),np.hstack((upper,lower[::-1])),color="#729fcf",alpha=0.3)
+    plt.plot(x,upper,color="#204a87",linewidth=0.2)
+    plt.plot(x,lower,color="#204a87",linewidth=0.2)
 
 def R2(X,F,B,beta):
     return(1-sum((F-np.dot(B(X),beta))**2)/sum((F-np.mean(F))**2))
@@ -83,3 +95,20 @@ def pvalue(beta,covBeta,X):
 #########################
 ## Question 6
 
+
+
+#########################
+## Our code
+
+(beta, covBeta) = LR(X,F[:,0],B)
+phi = B(X)
+phi_x = phi[:,1]
+x = (np.linspace(phi_x.min() - 1,phi_x.max() + 1,200))[:,None]
+xmat = np.hstack((x,x,x,x))
+m,v = predLR(xmat,B,beta,covBeta)
+
+#plt.plot(xmat[:,0],m)
+#plt.plot(phi_x,F[:,0],'rx')
+#plt.show()
+
+plotModel(phi_x,m,v)
