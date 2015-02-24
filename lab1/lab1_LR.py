@@ -39,10 +39,12 @@ def LR(X,F,B):
     phi = B(X)
     tmp = np.linalg.inv(np.dot(phi.T,phi))
     beta = np.dot(tmp,np.dot(phi.T,F))
-    N,D = X.shape
+    N,D = phi.shape
     diff = F - np.dot(phi,beta)
-    sigma = (1 / (N - D)) * np.dot(diff,diff)
-    covBeta = sigma**2 * tmp
+    #print "F=",F,"Pred=", np.dot(phi,beta), "diff=", diff
+    sigma2 = (1.0 / (N-D)) * np.dot(diff,diff)
+    #print "sigma=", sigma 
+    covBeta = sigma2 * tmp
 
     return(beta,covBeta)
 
@@ -64,7 +66,7 @@ def predLR(x,B,beta,covBeta):
 
     return(m,v)
 
-def plotModel(x,m,v):
+def plotModel(x,m,v,xpoints,ypoints):
     #input:	  x, np.array with d columns representing m prediction points
     #		  m, predicted mean at x, np.array of shape (m,1)
     #		  v, predicted variance matrix, np.array of shape (m,m)
@@ -77,6 +79,7 @@ def plotModel(x,m,v):
     pb.fill(np.hstack((x,x[::-1])),np.hstack((upper,lower[::-1])),color="#729fcf",alpha=0.3)
     pb.plot(x,upper,color="#204a87",linewidth=0.2)
     pb.plot(x,lower,color="#204a87",linewidth=0.2)
+    pb.plot(xpoints,ypoints,'rx')
 
 def R2(X,F,B,beta):
     return(1-sum((F-np.dot(B(X),beta))**2)/sum((F-np.mean(F))**2))
@@ -111,5 +114,5 @@ m,v = predLR(xmat,B,beta,covBeta)
 #plt.plot(phi_x,F[:,0],'rx')
 #plt.show()
 
-plotModel(x,m,v)
+plotModel(x,m,v,phi_x,F[:,0])
 
