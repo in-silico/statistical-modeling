@@ -8,31 +8,31 @@ pb.ion()
 # the input points X and Y are always arrays with d columns
 
 def kern(X,Y,sigma2=1.,theta=.2):
-	d = np.sqrt(np.sum((X[:,None,:]-Y[None,:,:])**2/theta**2,2))
-	k = sigma2*(1+np.sqrt(3)*d)*np.exp(-np.sqrt(3)*d)
-	return(k)
+    d = np.sqrt(np.sum((X[:,None,:]-Y[None,:,:])**2/theta**2,2))
+    k = sigma2*(1+np.sqrt(3)*d)*np.exp(-np.sqrt(3)*d)
+    return(k)
 
 def kern(X,Y,sigma2=1.,theta=.2):
-	d = np.sqrt(np.sum((X[:,None,:]-Y[None,:,:])**2/theta**2,2))
-	k = sigma2*(1+np.sqrt(3)*d)*np.exp(-np.sqrt(3)*d)
-	return(k)
+    d = np.sqrt(np.sum((X[:,None,:]-Y[None,:,:])**2/theta**2,2))
+    k = sigma2*(1+np.sqrt(3)*d)*np.exp(-np.sqrt(3)*d)
+    return(k)
 
 def kern(X,Y,sigma2=1.):
-	k = sigma2*np.ones((X.shape[0],Y.shape[0]))
-	return(k)
+    k = sigma2*np.ones((X.shape[0],Y.shape[0]))
+    return(k)
 
 def kern(X,Y,sigma2=1.):
-	k = sigma2*np.fmin(X,Y.T)
-	return(k)
+    k = sigma2*np.fmin(X,Y.T)
+    return(k)
 
 def kern(X,Y,sigma2=1.):
-	k = sigma2*np.all(X[:,None,:]==Y[None,:,:],axis=2)
-	return(k)
+    k = sigma2*np.all(X[:,None,:]==Y[None,:,:],axis=2)
+    return(k)
 
 def kern(X,Y,sigma2=1.,theta=.2):
-	d2 = np.sum((X[:,None,:]-Y[None,:,:])**2/theta**2,2)
-	k = sigma2*np.exp(-d2/2.)
-	return(k)
+    d2 = np.sum((X[:,None,:]-Y[None,:,:])**2/theta**2,2)
+    k = sigma2*np.exp(-d2/2.)
+    return(k)
 
 ## plot kernel
 x = np.linspace(-1,1,200)[:,None]
@@ -42,11 +42,11 @@ pb.plot(x,y,linewidth=2)
 #########################
 ## Question 2
 def sampleGP(x,mu,kern,n,**kwargs):
-	# return n sample paths from a centred GP N(mu,kern) evaluated at x
-	
-	# ... to be completed ...
+    # return n sample paths from a centred GP N(mu,kern) evaluated at x
 
-	return()
+    # ... to be completed ...
+
+    return()
 
 
 #########################
@@ -55,23 +55,23 @@ def sampleGP(x,mu,kern,n,**kwargs):
 #########################
 ## Question 4
 def predGPR(x,X,F,kern,**kwargs):
-	#function returning predicted mean and variance
-	#input:	  x, np.array with d columns representing m prediction points
-	#		  X, np.array with d columns representing the DoE
-	#		  F, np.array with 1 column representing the observations
-	# 		  kern, a kernel function
-	#         **kwargs, arguments that can be passed to the kernel function
-	#output:  m, predicted mean at x, np.array of shape (m,1)
-	#		  v, predicted variance matrix, np.array of shape (m,m)
-	
-	# ... to be completed ...
+    #function returning predicted mean and variance
+    #input:	  x, np.array with d columns representing m prediction points
+    #		  X, np.array with d columns representing the DoE
+    #		  F, np.array with 1 column representing the observations
+    # 		  kern, a kernel function
+    #         **kwargs, arguments that can be passed to the kernel function
+    #output:  m, predicted mean at x, np.array of shape (m,1)
+    #		  v, predicted variance matrix, np.array of shape (m,m)
 
-	return(m,v)
+    # ... to be completed ...
+
+    return(m,v)
 
 #########################
 ## Question 5
 def ftest(x):
-	return(np.sin(3*np.pi*x)+2*x)
+    return(np.sin(3*np.pi*x)+2*x)
 
 def plotModel(x,m,v,**kwargs):
     x = x.flatten()
