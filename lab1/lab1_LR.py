@@ -4,7 +4,7 @@ import scipy.stats as stats
 import time
 import matplotlib.pyplot as plt
 
-#pb.ion()
+pb.ion()
 
 #########################
 ## Question 1
@@ -73,10 +73,10 @@ def plotModel(x,m,v):
     v = np.diag(v)
     upper=m+2*np.sqrt(v)
     lower=m-2*np.sqrt(v)
-    plt.plot(x,m,color="#204a87",linewidth=2)
-    plt.fill(np.hstack((x,x[::-1])),np.hstack((upper,lower[::-1])),color="#729fcf",alpha=0.3)
-    plt.plot(x,upper,color="#204a87",linewidth=0.2)
-    plt.plot(x,lower,color="#204a87",linewidth=0.2)
+    pb.plot(x,m,color="#204a87",linewidth=2)
+    pb.fill(np.hstack((x,x[::-1])),np.hstack((upper,lower[::-1])),color="#729fcf",alpha=0.3)
+    pb.plot(x,upper,color="#204a87",linewidth=0.2)
+    pb.plot(x,lower,color="#204a87",linewidth=0.2)
 
 def R2(X,F,B,beta):
     return(1-sum((F-np.dot(B(X),beta))**2)/sum((F-np.mean(F))**2))
@@ -111,4 +111,5 @@ m,v = predLR(xmat,B,beta,covBeta)
 #plt.plot(phi_x,F[:,0],'rx')
 #plt.show()
 
-plotModel(phi_x,m,v)
+plotModel(x,m,v)
+
