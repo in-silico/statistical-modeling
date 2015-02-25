@@ -105,23 +105,36 @@ double toDouble(const frac& f) {
   return ((double)f.p)/f.q;
 }
 
+double getAngle(const vector<double>& f) {
+  double wl = f[0]*2 + 4;
+  double ww = f[1]*2 + 3.5;
+  double tl = f[2]*3 + 6;
+  double al = f[3]*2 + 10;
+  double gancho = 2.5; //2.5 cm
+  double a1 = tl - gancho, a2 = al - gancho;
+  double theta = acos((wl*wl + a1*a1 - a2*a2) / (2*wl*a1));
+  theta = theta*180/acos(-1);
+  return theta;
+}
+
 void generateVoronoi(int nclusters, int nsamples, int ndims) {
   Halton h(ndims);
-  Mat* pts = new Mat(ndims*nsamples);
-  pts->setSize(nsamples, ndims);
   vector< vector<frac> > samples = h.genSequence(nsamples);
-  /*vector< vector<double> > corrected;
+  vector< vector<double> > corrected;
   for (int i=0; i<nsamples; i++) {
-    double wl = toDouble(samples[i][0])*2 + 4;
-    double ww = toDouble(samples[i][1])*2 + 3.5;
-    double tl = toDouble(samples[i][2])*3 + 6;
-    double al = toDouble(samples[i][3])*2 + 10;
-    if ((
-  }*/
-  for (int i=0; i<nsamples; i++) {
+    vector<double> tmp;
+    for(int j=0; j<ndims; j++) 
+      tmp.push_back(toDouble(samples[i][j]));
+    double theta = getAngle(tmp);
+    if (theta > 80 && theta < 130) {
+      corrected.push_back(tmp);
+    }
+  }
+  Mat* pts = new Mat(ndims*corrected.size());
+  pts->setSize(corrected.size(), ndims);
+  for (int i=0; i<corrected.size(); i++) {
     for (int j = 0; j < ndims; ++j){
-      double xsample = ((double)samples[i][j].p) / samples[i][j].q;
-      pts->get(i,j) = xsample;
+      pts->get(i,j) = corrected[i][j];
     }
   }
 
@@ -149,8 +162,19 @@ void generateVoronoi(int nclusters, int nsamples, int ndims) {
   delete pts;
 }
 
+void testAngle() {
+  vector<double> tmp;
+  double wl=4.38, ww=4.49, tl=8.46, al=10.98;
+  tmp.push_back((wl-4)/2.0);
+  tmp.push_back((ww-3.5)/2.0);
+  tmp.push_back((tl-6)/3.0);
+  tmp.push_back((al-10)/2.0);
+  cout << getAngle(tmp) << endl;
+}
+
 int main() {
   int n, d, nclusters;
+  //testAngle();
   cin >> n >> d >> nclusters;
   /*Halton h(d);
   vector<vector<frac> > f = h.genSequence(n);
