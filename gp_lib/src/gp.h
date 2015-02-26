@@ -28,8 +28,8 @@ namespace gplib {
     public:
       GPReg();
       ~GPReg();
-      void setKernel(const shared_ptr<Kernel>& k);
-      shared_ptr<Kernel> getKernel() const;
+      void setKernel(const std::shared_ptr<Kernel>& k);
+      std::shared_ptr<Kernel> getKernel() const;
       void setTrainingSet(const arma::mat &X, const arma::vec& y);
       void train();
       arma::vec predict(const arma::mat& newData) const;
