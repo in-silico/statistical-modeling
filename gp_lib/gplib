@@ -1,0 +1,6 @@
+#ifndef GPLIB
+#define GPLIB
+
+#include "gplib_folder/gplib.h"
+
+#endif
