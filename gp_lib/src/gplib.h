@@ -7,5 +7,6 @@
 
 #include "mvgauss.h"
 #include "basic.h"
+#include "gp.h"
 
 #endif
