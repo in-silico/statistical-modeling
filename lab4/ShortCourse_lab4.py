@@ -35,7 +35,16 @@ def leaveOneOut(m):
         mean[i],var[i] = mloo.predict(X[i:i+1,:])
     return(mean.T,var)
 
-def EI(x,m):
+def getGP(X,y):
+    kern = GPy.kern.RBF(input_dim=d,variance=0.22,lengthscale=[1.6,3.5,5.5,1.5], ARD=True)
+    m = GPy.models.gp_regression.GPRegression(X, F, kern)
+    m.optimize()
+    return m
+
+def EI(x,noisy_m):
+    filtered_y, var_noise = noisy_m.predict(m.X)
+    m = GPy.gp_regression.GPRegression(m.X, filtered_y, noisy_m.kern)
+    m['.*noise'] = 0
     mean, var = m.predict(x)
     var[var<0] = 0
     u = (np.min(m.Y) - mean)/np.sqrt(var)
@@ -85,3 +94,10 @@ _ = pb.hist(stan_res,normed=True)
 x = np.linspace(-3,3,100)
 pb.plot(x,sp.stats.norm.pdf(x))
 
+
+# Our code
+
+funct = lambda x : EI(x,mopt)
+initial_x = array([5,4,7,11])
+the_bounds = [(4,6),(3.5,5.5),(6,9),(10,12)]
+sp.optimice.minimize(funct,initial_x,bounds=the_bounds)
