@@ -82,11 +82,11 @@ namespace gplib {
       return ans;
     }
 
-    void train(int maxIter) {
+    void train(int maxIter, double tolerance) {
       using namespace nlopt;
       nlopt::opt mymin(LD_MMA,kernel->nparams()); 
       mymin.set_min_objective(Implementation::trainingObj, this);
-      mymin.set_xtol_rel(1e-4);
+      mymin.set_xtol_rel(tolerance);
       mymin.set_maxeval(maxIter);
       mymin.set_lower_bounds(kernel->getLowerBounds());
       mymin.set_upper_bounds(kernel->getUpperBounds());
@@ -120,7 +120,9 @@ namespace gplib {
     pimpl->y = y;
   }
 
-  //void train();
+  void GPReg::train(int maxIter, double rel_tolerance) {
+    pimpl->train(maxIter, rel_tolerance);
+  }
 
   MVGauss GPReg::fullPredict(const arma::mat& newData) const {
     return pimpl->predict(newData);

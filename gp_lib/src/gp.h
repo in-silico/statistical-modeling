@@ -10,6 +10,7 @@ namespace gplib {
 
     class Kernel {
     public:
+      virtual ~Kernel() = 0;
       virtual arma::mat eval(const arma::mat& X, const arma::mat& Y,
           unsigned int idOut1=0, unsigned int idOut2=0) const = 0;
       virtual arma::mat derivate(unsigned int paramId, const arma::mat& X,
@@ -31,7 +32,7 @@ namespace gplib {
       void setKernel(const std::shared_ptr<Kernel>& k);
       std::shared_ptr<Kernel> getKernel() const;
       void setTrainingSet(const arma::mat &X, const arma::vec& y);
-      void train();
+      void train(int maxIter=100, double rel_tolerance=1e-4);
       MVGauss fullPredict(const arma::mat& newData) const;
       arma::vec predict(const arma::mat& newData) const;
     };
