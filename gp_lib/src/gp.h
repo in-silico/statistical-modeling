@@ -32,6 +32,7 @@ namespace gplib {
       std::shared_ptr<Kernel> getKernel() const;
       void setTrainingSet(const arma::mat &X, const arma::vec& y);
       void train();
+      MVGauss fullPredict(const arma::mat& newData) const;
       arma::vec predict(const arma::mat& newData) const;
     };
 };
