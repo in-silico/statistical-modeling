@@ -42,10 +42,10 @@ def getGP(X,y):
     return m
 
 def EI(x,noisy_m):
-    filtered_y, var_noise = noisy_m.predict(m.X)
-    m = GPy.gp_regression.GPRegression(m.X, filtered_y, noisy_m.kern)
+    filtered_y, var_noise = noisy_m.predict(noisy_m.X)
+    m = GPy.models.gp_regression.GPRegression(noisy_m.X, filtered_y, noisy_m.kern)
     m['.*noise'] = 0
-    mean, var = m.predict(x)
+    mean, var = m.predict( np.array([x]) )
     var[var<0] = 0
     u = (np.min(m.Y) - mean)/np.sqrt(var)
     ei = np.sqrt(var) * (u * sp.stats.norm.cdf(u) + sp.stats.norm.pdf(u))
@@ -63,7 +63,7 @@ F = data[:,4:6]
 G = F.copy()
 G[F[:,0]-F[:,1]>1,0] = F[F[:,0]-F[:,1]>1,1]
 F = -np.mean(G,axis=1)[:,None] + np.mean(data[:,4:6])
-
+'''
 ## basic plots
 for i in range(4):
     pb.figure()
@@ -75,7 +75,7 @@ pb.plot(data[:,4],data[:,5],'kx',mew=1.5)
 pb.title('experiment 1 vs experiment 2')
 pb.xlim((G.min(),G.max()))
 pb.ylim((G.min(),G.max()))
-
+'''
 ###################################
 # build GPR model
 
@@ -88,16 +88,20 @@ mn , v = leaveOneOut(mopt)
 Q2(F , mn[:,None])
 
 # test 2 quality of confidence intervals
+'''
 stan_res = (mn-F[:,0])/np.sqrt(v)
 pb.figure()
 _ = pb.hist(stan_res,normed=True)
 x = np.linspace(-3,3,100)
 pb.plot(x,sp.stats.norm.pdf(x))
-
+'''
 
 # Our code
 
-funct = lambda x : EI(x,mopt)
-initial_x = array([5,4,7,11])
+funct = lambda x : -EI(x,mopt)
+initial_x = np.array([5,4,7,11])
 the_bounds = [(4,6),(3.5,5.5),(6,9),(10,12)]
-sp.optimice.minimize(funct,initial_x,bounds=the_bounds)
+opt = sp.optimize.minimize(funct,initial_x,bounds=the_bounds)
+
+print opt.x
+
