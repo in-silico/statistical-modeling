@@ -100,7 +100,8 @@ pb.plot(x,sp.stats.norm.pdf(x))
 
 funct = lambda x : -EI(x,mopt)
 initial_x = np.array([5,4,7,11])
-the_bounds = [(4,6),(3.5,5.5),(6,9),(10,12)]
+#the_bounds = [(4,6),(3.5,5.5),(6,9),(10,12)]
+the_bounds = [(5,7),(2.15241636, 4.41293532), (4.95588891,10.29703702),( 9.39553697, 13.63958193)]
 opt = sp.optimize.minimize(funct,initial_x,bounds=the_bounds)
 
 print opt.x
